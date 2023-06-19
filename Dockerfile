@@ -34,7 +34,7 @@ RUN --mount=type=cache,target=/var/log \
         && chown -R apache:apache /var/www/mojolicious
     apt-get update && apt-get -y upgrade
     # Install needed packages
-    apt-get -y install --no-install-recommends libmojolicious-perl libdata-serializer-perl libfreezethaw-perl
+    apt-get -y install --no-install-recommends libmojolicious-perl libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
     apt-get -y autoremove --purge
     rm -rf /var/lib/apt/lists/* /tmp/*
     # create needed directories
