@@ -7,10 +7,9 @@ general:
     - CVE-2022-1304 
     - CVE-2022-3715 
     - CVE-2022-4899
-    - CVE-2023-29491
     - CVE-2023-31484
     - CVE-2023-45853
-    - CVE-2023-47038
+    - CVE-2024-0567
 #  bestPracticeViolations:
 #    - CIS-DI-0001
 #    - DKL-DI-0006
