@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 # requires DOCKER_BUILDKIT=1 set when running docker build
-FROM debian:11.9-slim
+FROM debian:12.4-slim
 
 ARG BUILD_DATE
 ARG BUILD_VERSION
@@ -32,9 +32,13 @@ RUN --mount=type=cache,target=/var/log \
     mkdir -p /var/www/mojolicious \
         && chmod -R 755 /var/www/mojolicious \
         && chown -R apache:apache /var/www/mojolicious
+    # Add bullseye sources
+    sed s/bookworm/bullseye/g /etc/apt/sources.list.d/debian.sources > /etc/apt/sources.list.d/bullseye.sources
     apt-get update && apt-get -y upgrade
-    # Install needed packages
-    apt-get -y install --no-install-recommends libmojolicious-perl libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
+    # Install libmojolicious-perl from bullseye
+    apt-get -y install --no-install-recommends libmojolicious-perl/bullseye
+    # Install rest of the needed packages
+    apt-get -y install --no-install-recommends libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
     apt-get -y autoremove --purge
     rm -rf /var/lib/apt/lists/* /tmp/*
     # create needed directories
