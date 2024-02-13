@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 # requires DOCKER_BUILDKIT=1 set when running docker build
-FROM debian:11.8-slim
+FROM debian:11.9-slim
 
 ARG BUILD_DATE
 ARG BUILD_VERSION
