@@ -23,7 +23,7 @@ LABEL maintainer="Jan Wagner <waja@cyconet.org>" \
 
 # hadolint ignore=DL3017,DL3008
 RUN --mount=type=cache,target=/var/log \
-    --mount=type=cache,target=/var/cache \
+    --mount=type=cache,sharing=locked,target=/var/cache \
     --mount=type=tmpfs,target=/tmp \
     <<EOF
     # Create apache group and user
@@ -35,10 +35,8 @@ RUN --mount=type=cache,target=/var/log \
     # Add bullseye sources
     sed s/bookworm/bullseye/g /etc/apt/sources.list.d/debian.sources > /etc/apt/sources.list.d/bullseye.sources
     apt-get update && apt-get -y upgrade
-    # Install libmojolicious-perl from bullseye
-    apt-get -y install --no-install-recommends libmojolicious-perl/bullseye
-    # Install rest of the needed packages
-    apt-get -y install --no-install-recommends libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
+    # Install libmojolicious-perl from bullseye and rest of the needed packages from stable
+    apt-get -y install --no-install-recommends libmojolicious-perl/bullseye libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
     apt-get -y autoremove --purge
     rm -rf /var/lib/apt/lists/* /tmp/*
     # create needed directories
