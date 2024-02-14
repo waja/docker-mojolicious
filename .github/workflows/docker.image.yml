@@ -146,11 +146,11 @@ jobs:
           echo "${CONTAINER_OUTPUT}"
           CONTAINER_OUTPUT="$(docker run --rm -t localhost:5000/foobar/${{ env.IMAGE_NAME }} dpkg -s libmojolicious-perl)"
           echo "${CONTAINER_OUTPUT}"
-          #CONTAINER_OUTPUT="$(docker run --rm -t localhost:5000/foobar/${{ env.IMAGE_NAME }} morbo -h )"
-          #echo "${CONTAINER_OUTPUT}"
-          #TEST_STRING=$(echo "${CONTAINER_OUTPUT}" | head -1 | cut -d' ' -f2)
-          #echo "${TEST_STRING}"
-          #if ! [ "${TEST_STRING}" = "morbo" ]; then echo "${TEST_STRING} is not even 'morbo'"; exit 1; fi
+          CONTAINER_OUTPUT="$(docker run --rm -t localhost:5000/foobar/${{ env.IMAGE_NAME }} /usr/bin/hypnotoad --help 2>&1 | grep ^Usage )"
+          echo "${CONTAINER_OUTPUT}"
+          TEST_STRING=$(echo "${CONTAINER_OUTPUT}" | head -1 | cut -d' ' -f2)
+          echo "${TEST_STRING}"
+          if ! [ "${TEST_STRING}" = "hypnotoad" ]; then echo "${TEST_STRING} is not even 'hypnotoad'"; exit 1; fi
       - name: Scan image with Container Scan
         uses: Azure/container-scan@v0
         env:
