@@ -23,7 +23,7 @@ LABEL maintainer="Jan Wagner <waja@cyconet.org>" \
 
 # hadolint ignore=DL3017,DL3008
 RUN --mount=type=cache,target=/var/log \
-    --mount=type=cache,target=/var/cache \
+    --mount=type=cache,sharing=locked,target=/var/cache \
     --mount=type=tmpfs,target=/tmp \
     <<EOF
     # Create apache group and user
