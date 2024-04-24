@@ -1,5 +1,7 @@
 # syntax = docker/dockerfile:1
 # requires DOCKER_BUILDKIT=1 set when running docker build
+# checkov:skip=CKV_DOCKER_2: no healthcheck (yet)
+# checkov:skip=CKV_DOCKER_3: no user (yet)
 FROM debian:12.4-slim
 
 ARG BUILD_DATE
