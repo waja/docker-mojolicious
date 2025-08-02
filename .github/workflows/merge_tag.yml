@@ -1,0 +1,63 @@
+name: "Manual: Merge development → master & tag"
+
+# Mitigate CKV2_GHA_1: "Ensure top-level permissions are not set to write-all"
+permissions: read-all
+
+# checkov:skip=CKV_GHA_7 reason="This workflow needs manual inputs for tagging and merging"
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Tag name to create (e.g. v1.2.3)"
+        required: true
+      create_tag:
+        description: "Create Git tag?"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  merge-and-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TRIGGER }}
+
+      - name: ⚙️ Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TRIGGER }}@github.com/${{ github.repository }}
+
+      - name: 🔀 Merge development into master
+        run: |
+          git checkout master
+          git merge origin/development --no-ff -m "Bot merge from development into master"
+          git push origin master
+
+      - name: 🚦 Check if tag already exists
+        if: ${{ github.event.inputs.create_tag == 'true' }}
+        env:
+          TAG_NAME: ${{ github.event.inputs.tag_name }}
+        run: |
+          if git rev-parse "refs/tags/$TAG_NAME" >/dev/null 2>&1; then
+            echo "Tag $TAG_NAME already exists. Skipping tag creation."
+            exit 1  # exit 1 to fail the workflow
+          fi
+
+      - name: 🏷️ Create Git tag (optional)
+        if: ${{ github.event.inputs.create_tag == 'true' }}
+        env:
+          TAG_NAME: ${{ github.event.inputs.tag_name }}
+        run: |
+          git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+          git push origin "$TAG_NAME"
