@@ -2,7 +2,7 @@
 # requires DOCKER_BUILDKIT=1 set when running docker build
 # checkov:skip=CKV_DOCKER_2: no healthcheck (yet)
 # checkov:skip=CKV_DOCKER_3: no user (yet)
-FROM debian:13.3-slim@sha256:77ba0164de17b88dd0bf6cdc8f65569e6e5fa6cd256562998b62553134a00ef0
+FROM debian:13.3-slim@sha256:bfc1a095aef012070754f61523632d1603d7508b4d0329cd5eb36e9829501290
 
 ARG BUILD_DATE
 ARG BUILD_VERSION
