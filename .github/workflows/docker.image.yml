@@ -131,15 +131,17 @@ jobs:
           docker buildx imagetools inspect localhost:5000/foobar/${{ env.IMAGE_NAME }}
       - name: Test the Docker image
         run: |
-          CONTAINER_OUTPUT="$(docker run --rm -t localhost:5000/foobar/${{ env.IMAGE_NAME }} whoami )"
-          echo "${CONTAINER_OUTPUT}"
-          CONTAINER_OUTPUT="$(docker run --rm -t localhost:5000/foobar/${{ env.IMAGE_NAME }} dpkg -s libmojolicious-perl)"
-          echo "${CONTAINER_OUTPUT}"
-          CONTAINER_OUTPUT="$(docker run --rm -t localhost:5000/foobar/${{ env.IMAGE_NAME }} /usr/bin/hypnotoad --help 2>&1 | grep ^Usage )"
-          echo "${CONTAINER_OUTPUT}"
+          CONTAINER_OUTPUT=$(docker run --rm localhost:5000/foobar/${{ env.IMAGE_NAME }} /usr/bin/hypnotoad --help 2>&1 | grep ^Usage)
+          echo "Container output: $CONTAINER_OUTPUT"
+          echo "Container output (quoted): '$CONTAINER_OUTPUT'"
+
           TEST_STRING=$(echo "${CONTAINER_OUTPUT}" | head -1 | cut -d' ' -f2)
-          echo "${TEST_STRING}"
-          if ! [ "${TEST_STRING}" = "hypnotoad" ]; then echo "${TEST_STRING} is not even 'hypnotoad'"; exit 1; fi
+          echo "Extracted test string: '$TEST_STRING'"
+
+          if ! [ "${TEST_STRING}" = "hypnotoad" ]; then
+            echo "ERROR: Expected 'hypnotoad' but got '$TEST_STRING'"
+            exit 1
+          fi
   dockle:
     name: Run Dockle tests
     needs:
