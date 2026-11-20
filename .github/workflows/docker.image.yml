@@ -6,7 +6,6 @@ on:
     branches:
       - $default-branch
       - development
-      - current-mojolicious
       - master
     tags:
       - "*.*.*-*"
@@ -143,9 +142,6 @@ jobs:
             echo "ERROR: Expected 'hypnotoad' but got '$TEST_STRING'"
             exit 1
           fi
-
-          MOJO_VERSION=$(docker run --rm localhost:5000/foobar/${{ env.IMAGE_NAME }} perl -MMojolicious -e 'print $Mojolicious::VERSION')
-          echo "Mojolicious version from Debian package: $MOJO_VERSION"
   dockle:
     name: Run Dockle tests
     needs:
