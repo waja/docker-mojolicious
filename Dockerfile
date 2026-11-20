@@ -34,11 +34,9 @@ RUN --mount=type=cache,target=/var/log \
     mkdir -p /var/www/mojolicious \
         && chmod -R 755 /var/www/mojolicious \
         && chown -R apache:apache /var/www/mojolicious
-    # Add bullseye sources
-    sed s/trixie/bullseye/g /etc/apt/sources.list.d/debian.sources > /etc/apt/sources.list.d/bullseye.sources
     apt-get update && apt-get -y upgrade
-    # Install libmojolicious-perl from bullseye and rest of the needed packages from stable
-    apt-get -y install --no-install-recommends libmojolicious-perl/bullseye libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
+    # Install Mojolicious and application dependencies from Debian
+    apt-get -y install --no-install-recommends libmojolicious-perl libdata-serializer-perl libfreezethaw-perl liblist-moreutils-perl
     apt-get -y autoremove --purge
     rm -rf /var/lib/apt/lists/* /tmp/*
     # create needed directories
